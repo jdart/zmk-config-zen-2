@@ -173,11 +173,6 @@
                 key-positions = <1 2 4>;
                 bindings = <&bt BT_CLR>;
             };
-            c_OUT {
-                timeout-ms = <50>;
-                key-positions = <5 6 8>;
-                bindings = <&out OUT_TOG>;
-            };
             c_RST {
                 timeout-ms = <50>;
                 key-positions = <1 2 3>;
