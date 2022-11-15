@@ -2,59 +2,260 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 
+#define AS(keycode) &as LS(keycode) keycode
+#define ASS(keycode) &ass LS(keycode) keycode
+
+&sk {
+    release-after-ms = <2500>;
+};
+
 / {
   chosen {
-    zmk,matrix_transform = &default_transform;
-    //zmk,matrix_transform = &five_column_transform;
+//     zmk,matrix_transform = &default_transform;
+    zmk,matrix_transform = &five_column_transform;
   };
 };
 
 / {
-        keymap {
-                compatible = "zmk,keymap";
-
-                default_layer {
-                        label = "QWERTY";
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
-                        bindings = <
-   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                  &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-                        >;
-                };
-                lower_layer {
-                        label = "NUMBER";
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                          	        &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
-                        >;
-                };
-
-                raise_layer {
-                        label = "SYMBOL";
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                    	     &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
-                        >;
-                };
+    macros {
+        vim_indent: vim_indent {
+            compatible = "zmk,behavior-macro";
+            label = "ZM_vim_indent";
+            #binding-cells = <0>;
+            wait-ms = <30>;
+            tap-ms = <40>;
+            bindings = <&kp GT &kp GT>;
         };
+        vim_dedent: vim_dedent {
+            compatible = "zmk,behavior-macro";
+            label = "ZM_vim_dedent";
+            #binding-cells = <0>;
+            wait-ms = <30>;
+            tap-ms = <40>;
+            bindings = <&kp LT &kp LT>;
+        };
+    };
+    behaviors {
+        swap: swap {
+            compatible = "zmk,behavior-tri-state";
+            label = "SWAPPER";
+            #binding-cells = <0>;
+            bindings = <&kt LGUI>, <&kp TAB>, <&kt LGUI>;
+            ignored-key-positions = <27>;
+        };
+        ltf: layer_toggle_fast {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TOGGLE_FAST";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <250>;
+            bindings = <&mo>, <&kp>;
+        };
+        lts: layer_toggle_slow {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TOGGLE_SLOW";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <250>;
+            bindings = <&mo>, <&kp>;
+        };
+        tdq: tap_dance_0 {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_QUOTE";
+            #binding-cells = <0>;
+            tapping-term-ms = <300>;
+            bindings = <&kp SQT>, <&kp GRAVE>;
+        };
+        as: auto_shift {
+            compatible = "zmk,behavior-hold-tap";
+            label = "AUTO_SHIFT";
+            #binding-cells = <2>;
+            tapping_term_ms = <170>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        ass: auto_shift_slow {
+            compatible = "zmk,behavior-hold-tap";
+            label = "AUTO_SHIFT";
+            #binding-cells = <2>;
+            tapping_term_ms = <350>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        // 0  1  2  3  4      5  6  7  8  9 
+        // 10 11 12 13 14     15 16 17 18 19
+        // 20 21 22 23 24     25 26 27 28 29
+        //       30 31 32     33 34 35
+        combos {
+            compatible = "zmk,combos";
+            // symbols
+            c_LBRC {
+                timeout-ms = <50>;
+                key-positions = <17 27>;
+                bindings = <&kp LBRC>;
+            };
+            c_RBRC {
+                timeout-ms = <50>;
+                key-positions = <7 17>;
+                bindings = <&kp RBRC>;
+            };
+            c_LPAR {
+                timeout-ms = <50>;
+                key-positions = <18 28>;
+                bindings = <&kp LPAR>;
+            };
+            c_RPAR {
+                timeout-ms = <50>;
+                key-positions = <8 18>;
+                bindings = <&kp RPAR>;
+            };
+            c_LBKT {
+                timeout-ms = <50>;
+                key-positions = <16 26>;
+                bindings = <&kp LBKT>;
+            };
+            c_RBKT {
+                timeout-ms = <50>;
+                key-positions = <6 16>;
+                bindings = <&kp RBKT>;
+            };
+            c_LT {
+                timeout-ms = <100>;
+                key-positions = <19 29>;
+                bindings = <&kp LT>;
+            };
+            c_GT {
+                timeout-ms = <100>;
+                key-positions = <9 19>;
+                bindings = <&kp GT>;
+            };
+            // common shortcuts
+            c_AGL {
+                timeout-ms = <70>;
+                key-positions = <1 11>;
+                bindings = <&kp LA(LG(LARW))>;
+            };
+            c_AGR {
+                timeout-ms = <70>;
+                key-positions = <2 12>;
+                bindings = <&kp LA(LG(RARW))>;
+            };
+            c_GBL {
+                timeout-ms = <70>;
+                key-positions = <11 21>;
+                bindings = <&kp LG(LBKT)>;
+            };
+            c_GBR {
+                timeout-ms = <70>;
+                key-positions = <12 22>;
+                bindings = <&kp LG(RBKT)>;
+            };
+            c_VIM_INDENT {
+                timeout-ms = <70>;
+                key-positions = <13 23>;
+                bindings = <&vim_indent>;
+            };
+            c_VIM_DEDENT {
+                timeout-ms = <70>;
+                key-positions = <13 3>;
+                bindings = <&vim_dedent>;
+            };
+            // misc
+            c_esc {
+                timeout-ms = <50>;
+                key-positions = <27 28>;
+                bindings = <&kp ESCAPE>;
+            };
+            c_CLR {
+                timeout-ms = <50>;
+                key-positions = <1 2 4>;
+                bindings = <&bt BT_CLR>;
+            };
+            c_OUT {
+                timeout-ms = <50>;
+                key-positions = <5 6 8>;
+                bindings = <&out OUT_TOG>;
+            };
+            c_RST {
+                timeout-ms = <50>;
+                key-positions = <1 2 3>;
+                bindings = <&bootloader>;
+            };
+            c_CAPSWORD {
+                timeout-ms = <50>;
+                key-positions = <22 27>;
+                bindings = <&caps_word>;
+            };
+            c_CAPSLOCK {
+                timeout-ms = <50>;
+                key-positions = <23 26>;
+                bindings = <&kp CAPSLOCK>;
+            };
+            c_T {
+                timeout-ms = <50>;
+                key-positions = <2 3>;
+                bindings = <&kp B>;
+            };
+            c_Y {
+                timeout-ms = <50>;
+                key-positions = <6 7>;
+                bindings = <&kp J>;
+            };
+            c_B {
+                timeout-ms = <50>;
+                key-positions = <22 23>;
+                bindings = <&kp V>;
+            };
+            c_N {
+                timeout-ms = <50>;
+                key-positions = <26 27>;
+                bindings = <&kp K>;
+            };
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            label = "COLEMAK";
+            bindings = <
+    AS(Q)     AS(W)    AS(F)     AS(P)        AS(B)         AS(J)       AS(L)          AS(U)        AS(Y)      AS(SEMI)
+    AS(A)     ASS(R)   AS(S)     AS(T)        AS(G)         AS(M)       AS(N)          AS(E)        ASS(I)     AS(O)
+    AS(Z)     AS(X)    AS(C)     AS(D)        AS(V)         AS(K)       AS(H)          AS(COMMA)    AS(DOT)    AS(FSLH)
+                       &trans    &ltf 3 BKSP  &lts 1 TAB    &lts 1 RET  &ltf 2 SPACE   &trans
+            >;
+        };
+        raise {
+            label = "RAISE";
+            bindings = <
+    &kp DEL     &kp N7      &kp N8       &kp N9      &kp PRCNT          &kp AT     &kp EXCL    &tdq      &kp DQT     &kp COLON
+    &kp PLUS    &kp N4      &kp N5       &kp N6      &kp STAR           &kp LARW   &kp DARW    &kp UARW  &kp RARW    &kp EQUAL
+    &kp N0      &kp N1      &kp N2       &kp N3      &kp HASH           &kp TILDE  &kp AMPS    &kp PIPE  &kp UNDER   &kp BSLH
+                          	&trans       &kp CARET   &kp DLLR           &kp GT     &kp MINUS   &trans
+            >;
+        };
+
+        modsl {
+            label = "MODSL";
+            bindings = <
+    &trans      &trans       &vim_dedent &vim_indent &trans         &trans    &trans    &trans        &trans      &trans
+    &sk LALT    &sk LGUI     &sk LSFT    &sk LCTL    &trans         &trans    &trans    &trans        &trans      &trans
+    &kp LG(Z)   &kp LG(X)    &kp LG(C)   &kp LG(V)   &trans         &trans    &trans    &key_repeat   &trans      &trans
+                    	     &trans      &trans      &trans         &trans    &trans    &trans
+            >;
+        };
+
+        modsr {
+            label = "MODSR";
+            bindings = <
+    &trans     &trans    &trans     &trans     &trans      &trans     &kp LS(F6)   &kp LG(E)      &kp LG(M)      &kp LS(LG(F))
+    &kp LALT   &kp LGUI  &kp LSFT   &kp LCTL   &trans      &trans     &sk RCTL     &sk RSFT       &sk RGUI       &sk RALT
+    &trans     &trans    &trans     &trans     &trans      &trans     &swap        &kp LS(TAB)    &kp LG(GRAVE)  &kp LC(LS(R))
+                    	 &trans     &trans     &trans      &trans     &trans       &trans
+            >;
+        };
+    };
 };
