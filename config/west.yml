@@ -1,11 +1,11 @@
 manifest:
   remotes:
-    - name: zmkfirmware
-      url-base: https://github.com/LOWPROKB
+    - name: jdart
+      url-base: https://github.com/jdart
   projects:
     - name: zmk
-      remote: zmkfirmware
-      revision: corne-ish-zen-v2
+      remote: jdart
+      revision: main
       import: app/west.yml
   self:
     path: config
