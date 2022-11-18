@@ -36,13 +36,13 @@
         };
     };
     behaviors {
-        // swap: swap {
-        //     compatible = "zmk,behavior-tri-state";
-        //     label = "SWAPPER";
-        //     #binding-cells = <0>;
-        //     bindings = <&kt LGUI>, <&kp TAB>, <&kt LGUI>;
-        //     ignored-key-positions = <27>;
-        // };
+        swap: swap {
+            compatible = "zmk,behavior-tri-state";
+            label = "SWAPPER";
+            #binding-cells = <0>;
+            bindings = <&kt LGUI>, <&kp TAB>, <&kt LGUI>;
+            ignored-key-positions = <27>;
+        };
         ltf: layer_toggle_fast {
             compatible = "zmk,behavior-hold-tap";
             label = "LAYER_TOGGLE_FAST";
@@ -249,7 +249,7 @@
             bindings = <
     &trans     &trans    &trans     &trans     &trans      &trans     &kp LS(F6)   &kp LG(E)      &kp LG(M)      &kp LS(LG(F))
     &kp LALT   &kp LGUI  &kp LSFT   &kp LCTL   &trans      &trans     &sk RCTL     &sk RSFT       &sk RGUI       &sk RALT
-    &trans     &trans    &trans     &trans     &trans      &trans     &trans       &kp LS(TAB)    &kp LG(GRAVE)  &kp LC(LS(R))
+    &trans     &trans    &trans     &trans     &trans      &trans     &swap        &kp LS(TAB)    &kp LG(GRAVE)  &kp LC(LS(R))
                     	 &trans     &trans     &trans      &trans     &trans       &trans
             >;
         };
