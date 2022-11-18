@@ -218,7 +218,7 @@
             label = "COLEMAK";
             bindings = <
     AS(Q)     AS(W)    AS(F)     AS(P)        AS(B)         AS(J)       AS(L)          AS(U)        AS(Y)      AS(SEMI)
-    AS(A)     ASS(R)   AS(S)     AS(T)        AS(G)         AS(M)       AS(N)          AS(E)        ASS(I)     AS(O)
+    ASS(A)    ASS(R)   AS(S)     AS(T)        AS(G)         AS(M)       AS(N)          AS(E)        ASS(I)     AS(O)
     AS(Z)     AS(X)    AS(C)     AS(D)        AS(V)         AS(K)       AS(H)          AS(COMMA)    AS(DOT)    AS(FSLH)
                        &trans    &ltf 3 BKSP  &lts 1 TAB    &lts 1 RET  &ltf 2 SPACE   &trans
             >;
